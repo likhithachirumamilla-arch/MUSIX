@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSIX – AI Powered Music Streaming</title>
+    <link rel="icon" type="image/svg+xml" href="assets/covers/logo.svg">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/face-scanner.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- ================================================================
+             LEFT SIDEBAR (SPOTIFY INSPIRED)
+             ================================================================ -->
+        <aside class="sidebar">
+            <div class="brand-header">
+                <img src="assets/covers/logo.svg" alt="MUSIX Logo" class="brand-logo-img" />
+                <span class="brand-name">MUSIX</span>
+                <span class="brand-badge">AI</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#home" class="nav-link active" data-nav="home">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>Home</span>
+                </a>
+                <a href="#search" class="nav-link" data-nav="search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <span>Search</span>
+                </a>
+                <a href="#library" class="nav-link" data-nav="library">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    <span>Your Library</span>
+                </a>
+                <a href="#liked" class="nav-link" data-nav="liked">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span>Liked Songs</span>
+                </a>
+                <a href="#recently-played" class="nav-link" data-nav="recently-played">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Recently Played</span>
+                </a>
+
+                <!-- Special AI Face Search Feature -->
+                <a href="#face-search" class="nav-link nav-link-special" data-nav="face-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    <span>Face Search</span>
+                    <span class="feature-pill">AI MOOD</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section-title">Playlists</div>
+
+            <button class="sidebar-btn-action" id="btn-create-playlist">
+                <div class="sidebar-icon-box">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                </div>
+                <span>Create Playlist</span>
+            </button>
+
+            <button class="sidebar-btn-action" data-nav="liked">
+                <div class="sidebar-icon-box liked">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="#FFFFFF"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <span>Liked Songs</span>
+            </button>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-playlists-scroll">
+                <ul class="sidebar-pl-list" id="sidebar-playlists-list">
+                    <!-- Dynamic Playlists rendered here -->
+                </ul>
+            </div>
+        </aside>
+
+        <!-- ================================================================
+             MAIN CONTENT AREA
+             ================================================================ -->
+        <main class="main-wrapper">
+            <!-- Sticky Top Bar -->
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <button class="nav-history-btn" id="nav-back-btn" title="Go back">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <button class="nav-history-btn" id="nav-forward-btn" title="Go forward">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+
+                    <div class="top-search-wrapper">
+                        <svg class="top-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="search-input" class="top-search-input" placeholder="What do you want to listen to?" />
+                        <button class="top-search-clear" id="search-clear-btn">&times;</button>
+                    </div>
+                </div>
+
+                <div class="top-bar-right">
+                    <button class="cta-face-btn" data-nav="face-search">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                        <span>Scan Face Mood</span>
+                    </button>
+
+                    <button class="nav-icon-btn" id="btn-top-settings" title="Settings" onclick="window.musixApp.openModal('settings-modal')">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </button>
+
+                    <div class="user-profile-badge" id="user-profile-btn">
+                        <img src="assets/covers/happy_1.svg" alt="User Avatar" class="user-avatar-mini" />
+                        <span class="user-name-text" id="user-profile-name">Lucky</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                    </div>
+
+                    <!-- Profile Dropdown -->
+                    <div class="user-dropdown-menu" id="user-dropdown">
+                        <div class="dropdown-item" onclick="window.musixApp.openModal('auth-modal')">Account / Login</div>
+                        <div class="dropdown-item" onclick="window.musixApp.openModal('settings-modal')">Settings</div>
+                        <div class="sidebar-divider"></div>
+                        <div class="dropdown-item" onclick="window.musixApp.showToast('Logged out'); window.location.reload();">Log out</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content Views -->
+            <div class="content-scroll">
+                <!-- 1. HOME VIEW -->
+                <section id="view-home" class="view-section" style="display: block;">
+                    <h1 class="greeting-header" id="home-greeting">Good evening, Lucky</h1>
+
+                    <!-- 6-Card Quick Hero Grid -->
+                    <div class="hero-quick-grid" id="hero-quick-grid">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <!-- Recently Played -->
+                    <div class="section-header">
+                        <h2 class="section-title">Recently Played</h2>
+                        <span class="section-see-all" data-nav="library">Show all</span>
+                    </div>
+                    <div class="card-row-grid" id="recently-played-row"></div>
+
+                    <!-- Made For You (Mood Mixes) -->
+                    <div class="section-header">
+                        <h2 class="section-title">Made For You</h2>
+                        <span class="section-see-all" data-nav="search">Browse Moods</span>
+                    </div>
+                    <div class="card-row-grid" id="made-for-you-row"></div>
+
+                    <!-- Mood-Based Playlists -->
+                    <div class="section-header">
+                        <h2 class="section-title">Mood-Based Playlists</h2>
+                        <span class="section-see-all" data-nav="search">All Moods</span>
+                    </div>
+                    <div class="mood-banners-grid" id="mood-banners-grid">
+                        <div class="mood-banner-card banner-happy" onclick="window.musixApp.filterByMood('HAPPY')">
+                            <div class="mood-banner-content">
+                                <span class="mood-banner-tag">😄 UPBEAT & ENERGETIC</span>
+                                <h3 class="mood-banner-title">Euphoria Hits</h3>
+                                <p class="mood-banner-desc">Dance-pop, sunny grooves, and feel-good anthems to elevate your day.</p>
+                            </div>
+                            <button class="mood-banner-play" title="Play Euphoria Hits">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="mood-banner-card banner-relaxed" onclick="window.musixApp.filterByMood('RELAXED')">
+                            <div class="mood-banner-content">
+                                <span class="mood-banner-tag">🧘 CHILL & LO-FI</span>
+                                <h3 class="mood-banner-title">Midnight Velvet</h3>
+                                <p class="mood-banner-desc">Lofi beats, ambient rain, and peaceful textures for deep relaxation.</p>
+                            </div>
+                            <button class="mood-banner-play" title="Play Midnight Velvet">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="mood-banner-card banner-angry" onclick="window.musixApp.filterByMood('ANGRY')">
+                            <div class="mood-banner-content">
+                                <span class="mood-banner-tag">😡 HIGH ADRENALINE</span>
+                                <h3 class="mood-banner-title">Neon Fury</h3>
+                                <p class="mood-banner-desc">Hard-hitting rock, aggressive synths, and high-energy workout beats.</p>
+                            </div>
+                            <button class="mood-banner-play" title="Play Neon Fury">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="mood-banner-card banner-sad" onclick="window.musixApp.filterByMood('SAD')">
+                            <div class="mood-banner-content">
+                                <span class="mood-banner-tag">😢 SOULFUL & SLOW</span>
+                                <h3 class="mood-banner-title">Melancholy & Rain</h3>
+                                <p class="mood-banner-desc">Emotional acoustic chords, melancholic piano, and late-night ballads.</p>
+                            </div>
+                            <button class="mood-banner-play" title="Play Melancholy & Rain">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="mood-banner-card banner-surprised" onclick="window.musixApp.filterByMood('SURPRISED')">
+                            <div class="mood-banner-content">
+                                <span class="mood-banner-tag">😲 EXCITING DISCOVERY</span>
+                                <h3 class="mood-banner-title">Electric Shock</h3>
+                                <p class="mood-banner-desc">Unexpected future bass, festival drops, and cutting-edge EDM soundscapes.</p>
+                            </div>
+                            <button class="mood-banner-play" title="Play Electric Shock">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="mood-banner-card banner-neutral" onclick="window.musixApp.filterByMood('NEUTRAL')">
+                            <div class="mood-banner-content">
+                                <span class="mood-banner-tag">😐 TODAY'S PICKS</span>
+                                <h3 class="mood-banner-title">Midnight Drive</h3>
+                                <p class="mood-banner-desc">Trending pop, synthwave vibes, and smooth daily recommendations.</p>
+                            </div>
+                            <button class="mood-banner-play" title="Play Midnight Drive">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trending Songs -->
+                    <div class="section-header">
+                        <h2 class="section-title">Trending on MUSIX</h2>
+                        <span class="section-see-all">Show all</span>
+                    </div>
+                    <div class="card-row-grid" id="trending-songs-row"></div>
+
+                    <!-- Popular Artists -->
+                    <div class="section-header">
+                        <h2 class="section-title">Popular Artists</h2>
+                        <span class="section-see-all">Show all</span>
+                    </div>
+                    <div class="card-row-grid" id="popular-artists-row"></div>
+
+                    <!-- Recommended Albums -->
+                    <div class="section-header">
+                        <h2 class="section-title">Recommended Albums</h2>
+                        <span class="section-see-all">Show all</span>
+                    </div>
+                    <div class="card-row-grid" id="recommended-albums-row"></div>
+                </section>
+
+                <!-- 2. SPECIAL FEATURE: AI FACE SEARCH -->
+                <section id="view-face-search" class="view-section">
+                    <div class="face-search-hero">
+                        <div class="face-hero-badge">
+                            <span class="pulse-dot"></span>
+                            <span>BIOMETRIC AI MUSIC ENGINE</span>
+                        </div>
+                        <h1 class="face-hero-title">Let Your Face Choose Your Music.</h1>
+                        <p class="face-hero-subtitle">
+                            Your mood, your music. Let MUSIX understand how you feel. Look into the camera, smile, frown, or relax — our biometric emotion AI will instantly curate the perfect soundtrack.
+                        </p>
+
+                        <div class="face-cam-prompt" id="face-cam-prompt" style="display: none; margin-bottom: 16px; font-size: 13px; color: var(--accent); background: rgba(139, 92, 246, 0.15); border: 1px solid var(--border-subtle); padding: 8px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px;">
+                            <span class="pulse-dot"></span>
+                            <span>Webcam Ready: Look directly at the sensor and hit "Scan My Mood"</span>
+                        </div>
+
+                        <!-- Webcam Preview & Cyberpunk HUD Canvas -->
+                        <div class="face-scanner-viewport" id="face-scanner-viewport">
+                            <video id="face-webcam-video" class="face-webcam-stream" autoplay playsinline muted></video>
+                            <canvas id="face-scanner-canvas" class="face-scanner-canvas"></canvas>
+
+                            <!-- Glowing Circular Scanning Animation Overlay -->
+                            <div class="glowing-circular-scan" id="glowing-circular-scan">
+                                <div class="scan-ring ring-outer"></div>
+                                <div class="scan-ring ring-middle"></div>
+                                <div class="scan-ring ring-inner"></div>
+                                <div class="scan-radar-sweep"></div>
+                                <div class="scan-reticle-cross"></div>
+                                <div class="scan-biometric-dots">
+                                    <span class="bio-dot dot-1"></span>
+                                    <span class="bio-dot dot-2"></span>
+                                    <span class="bio-dot dot-3"></span>
+                                    <span class="bio-dot dot-4"></span>
+                                </div>
+                                <div class="scan-status-text" id="scan-status-label">ALIGN FACE TO SENSORS</div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="scanner-controls-bar">
+                            <button class="btn-scan-secondary" id="face-start-cam-btn">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <span>Connect Webcam</span>
+                            </button>
+
+                            <button class="btn-scan-main" id="face-scan-mood-btn">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+                                <span>Scan My Mood</span>
+                            </button>
+
+                            <label class="btn-scan-secondary" style="cursor: pointer;">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <span>Upload Selfie</span>
+                                <input type="file" id="face-photo-upload" accept="image/*" style="display: none;" />
+                            </label>
+                        </div>
+
+                        <!-- Preset Mood Chips for Quick Testing -->
+                        <div class="mood-preset-container">
+                            <div class="mood-preset-title">Or Test Instant Mood Presets</div>
+                            <div class="mood-preset-chips">
+                                <button class="mood-preset-btn" data-mood="HAPPY">😄 Happy</button>
+                                <button class="mood-preset-btn" data-mood="SAD">😢 Sad</button>
+                                <button class="mood-preset-btn" data-mood="ANGRY">😡 Angry</button>
+                                <button class="mood-preset-btn" data-mood="RELAXED">🧘 Relaxed</button>
+                                <button class="mood-preset-btn" data-mood="NEUTRAL">😐 Neutral</button>
+                                <button class="mood-preset-btn" data-mood="SURPRISED">😲 Surprised</button>
+                            </div>
+                        </div>
+
+                        <!-- Privacy Notice -->
+                        <div class="privacy-notice-box">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            <span>Privacy First: Webcam processing runs 100% locally in your browser sandbox. No video or photos are saved or uploaded.</span>
+                        </div>
+                    </div>
+
+                    <!-- Detected Mood Results & Recommendation Shelf -->
+                    <div id="face-results-section" style="display: none;">
+                        <div class="face-results-card">
+                            <div class="results-header-flex">
+                                <div class="detected-mood-badge" id="detected-mood-badge">
+                                    <span class="mood-icon">😄</span> Happy
+                                </div>
+                                <div class="detected-confidence" id="detected-confidence-meter">
+                                    96% Confidence Match
+                                </div>
+                            </div>
+
+                            <p class="detected-quote" id="detected-mood-quote">
+                                "Your face radiates positive energy and warm smiles. Time for uplifting dance and vibrant feel-good rhythms!"
+                            </p>
+
+                            <!-- Biometric Emotion Breakdown Meters -->
+                            <div class="emotion-breakdown-grid" id="face-emotion-breakdown">
+                                <!-- Populated dynamically -->
+                            </div>
+
+                            <div class="results-action-row">
+                                <div>
+                                    <h3 class="results-action-title" id="detected-mood-playlist-name">Face Mood: Euphoria & Joy</h3>
+                                    <span style="font-size: 13px; color: var(--text-muted);">Curated automatically for your current expression</span>
+                                </div>
+                                <button class="btn-play-mood-all" id="face-play-mood-mix">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                    <span>Play Mood Mix</span>
+                                </button>
+                            </div>
+
+                            <!-- Recommended Songs Table -->
+                            <div id="face-recommended-songs"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. SEARCH VIEW -->
+                <section id="view-search" class="view-section">
+                    <div id="search-genres-section">
+                        <h2 class="section-title">Browse all Genres & Moods</h2>
+                        <div class="genres-grid" id="genres-grid"></div>
+                    </div>
+
+                    <div id="search-results-section" style="display: none;">
+                        <h2 class="section-title" style="margin-bottom: 20px;">Search Results</h2>
+                        <div id="search-tracks-list"></div>
+                    </div>
+                </section>
+
+                <!-- 4. YOUR LIBRARY VIEW -->
+                <section id="view-library" class="view-section">
+                    <div class="section-header">
+                        <h1 class="greeting-header" style="margin-bottom: 0;">Your Library</h1>
+                        <button class="btn-scan-secondary" onclick="window.musixApp.openCreatePlaylistModal()">
+                            + New Playlist
+                        </button>
+                    </div>
+                    <div class="card-row-grid" id="library-playlists-grid"></div>
+                </section>
+
+                <!-- 5. LIKED SONGS VIEW -->
+                <section id="view-liked" class="view-section">
+                    <div class="playlist-hero">
+                        <img src="assets/covers/liked.svg" alt="Liked Songs" class="playlist-hero-cover" />
+                        <div class="playlist-hero-info">
+                            <span class="playlist-tag">Playlist</span>
+                            <h1 class="playlist-hero-title">Liked Songs</h1>
+                            <p class="playlist-hero-desc">Your personal collection of favorite tracks on MUSIX.</p>
+                            <div class="playlist-hero-meta">
+                                <strong>Lucky</strong> • <span id="liked-songs-count">0 songs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="playlist-action-bar">
+                        <button class="big-play-btn" id="liked-play-all-btn" title="Play Liked Songs">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                    </div>
+
+                    <div id="liked-songs-table"></div>
+                </section>
+
+                <!-- 6. RECENTLY PLAYED VIEW -->
+                <section id="view-recently-played" class="view-section">
+                    <div class="playlist-hero">
+                        <div class="playlist-hero-cover hero-cover-history">
+                            <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="#D8B4FE" stroke-width="1.8">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <div class="playlist-hero-info">
+                            <span class="playlist-tag">Listening History</span>
+                            <h1 class="playlist-hero-title">Recently Played</h1>
+                            <p class="playlist-hero-desc">Your playback history on MUSIX, updated in real-time as you listen.</p>
+                            <div class="playlist-hero-meta">
+                                <strong>Lucky</strong> • <span id="recent-songs-count">0 songs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="playlist-action-bar">
+                        <button class="big-play-btn" id="recent-play-all-btn" title="Play All Recent">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                        <button class="btn-scan-secondary" id="recent-clear-btn" onclick="window.musixApp.clearRecentlyPlayedHistory()">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            <span>Clear History</span>
+                        </button>
+                    </div>
+
+                    <div id="recently-played-table"></div>
+                </section>
+
+                <!-- 7. PLAYLIST DETAIL VIEW -->
+                <section id="view-playlist-detail" class="view-section">
+                    <div class="playlist-hero">
+                        <img src="assets/covers/happy_1.svg" alt="Playlist Cover" id="detail-pl-cover" class="playlist-hero-cover" />
+                        <div class="playlist-hero-info">
+                            <span class="playlist-tag">Playlist</span>
+                            <h1 class="playlist-hero-title" id="detail-pl-title">Playlist Name</h1>
+                            <p class="playlist-hero-desc" id="detail-pl-desc">Playlist description goes here.</p>
+                            <div class="playlist-hero-meta">
+                                <strong>MUSIX Curated</strong> • <span id="detail-pl-count">4 songs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="playlist-action-bar">
+                        <button class="big-play-btn" id="detail-pl-play-btn" title="Play Playlist">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                    </div>
+
+                    <div id="detail-pl-songs-table"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================================================================
+         BOTTOM FIXED MUSIC PLAYER (SPOTIFY STYLE)
+         ================================================================ -->
+    <footer class="player-bar" id="player-bar">
+        <!-- Left: Track Info -->
+        <div class="player-track-info">
+            <div class="player-thumb-wrapper">
+                <img src="assets/covers/happy_1.svg" alt="Album Art" id="player-cover-art" class="player-thumb" />
+            </div>
+            <div class="player-meta">
+                <div class="player-song-title" id="player-song-title">Levitating In Purple</div>
+                <div class="player-song-artist" id="player-song-artist">Luna Eclipse</div>
+            </div>
+            <button class="player-like-btn" id="player-like-btn" title="Save to Liked Songs">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Center: Playback Controls & Scrubber -->
+        <div class="player-center-controls">
+            <div class="player-buttons-row">
+                <button class="ctrl-btn" id="player-shuffle-btn" title="Shuffle">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                </button>
+                <button class="ctrl-btn" id="player-prev-btn" title="Previous">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="3"/></svg>
+                </button>
+                <button class="play-main-circle" id="player-play-btn" title="Play">
+                    <svg id="player-play-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="player-pause-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button class="ctrl-btn" id="player-next-btn" title="Next">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="3"/></svg>
+                </button>
+                <button class="ctrl-btn" id="player-repeat-btn" title="Repeat">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                </button>
+            </div>
+
+            <div class="player-progress-container">
+                <span class="time-stamp" id="player-current-time">0:00</span>
+                <div class="progress-bar-rail" id="player-progress-bar">
+                    <div class="progress-bar-fill" id="player-progress-fill">
+                        <div class="progress-bar-thumb"></div>
+                    </div>
+                </div>
+                <span class="time-stamp" id="player-total-duration">3:23</span>
+            </div>
+        </div>
+
+        <!-- Right: Audio Visualizer, Lyrics, Queue, Volume -->
+        <div class="player-right-tools">
+            <canvas id="player-visualizer" class="visualizer-canvas" width="48" height="24" title="Audio Visualizer"></canvas>
+
+            <button class="ctrl-btn" id="player-lyrics-btn" title="Lyrics">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </button>
+
+            <button class="ctrl-btn" id="player-queue-btn" title="Queue">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+
+            <div class="volume-wrapper">
+                <button class="ctrl-btn" id="player-volume-icon" title="Mute/Unmute">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <input type="range" id="player-volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="0.8" />
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================================================================
+         MODALS & DRAWERS
+         ================================================================ -->
+    <!-- Create Playlist Modal -->
+    <div class="modal-overlay" id="create-playlist-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Playlist</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <form id="form-create-playlist">
+                <div class="form-group">
+                    <label class="form-label">Playlist Name</label>
+                    <input type="text" id="playlist-name-input" class="form-input" placeholder="My Awesome Playlist" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description (optional)</label>
+                    <input type="text" id="playlist-desc-input" class="form-input" placeholder="Midnight vibes and favorite tracks" />
+                </div>
+                <button type="submit" class="btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth / Login & Registration Modal -->
+    <div class="modal-overlay" id="auth-modal">
+        <div class="modal-content auth-modal-content">
+            <div class="modal-header">
+                <div class="auth-brand-badge">
+                    <img src="assets/covers/logo.svg" alt="MUSIX" class="auth-brand-logo" />
+                    <span class="auth-brand-text">MUSIX</span>
+                </div>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+
+            <!-- Tab switcher -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-btn-login" onclick="window.musixApp.switchAuthTab('login')">Sign In</button>
+                <button class="auth-tab" id="tab-btn-register" onclick="window.musixApp.switchAuthTab('register')">Create Account</button>
+            </div>
+
+            <div class="auth-error-msg" id="auth-error-msg"></div>
+
+            <form id="form-auth">
+                <div class="form-group" id="group-auth-name" style="display: none;">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="auth-name-input" class="form-input" placeholder="Your Name" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="auth-email-input" class="form-input" placeholder="you@domain.com" value="lucky@musix.ai" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="auth-password-input" class="form-input" placeholder="At least 6 characters" value="password123" required />
+                        <button type="button" class="btn-pwd-toggle" id="btn-pwd-toggle" title="Toggle password visibility" onclick="window.musixApp.togglePasswordVisibility()">
+                            <svg id="eye-icon-show" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg id="eye-icon-hide" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="auth-submit-btn">Sign In to MUSIX</button>
+            </form>
+
+            <div class="auth-demo-shortcut">
+                <span>Want to test quickly?</span>
+                <button type="button" class="btn-demo-login" onclick="window.musixApp.fastDemoLogin()">Quick Demo Sign In (Lucky)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings & Theme & Privacy Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-content settings-modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">MUSIX Settings</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+
+            <div class="settings-scroll-body">
+                <!-- Theme Section -->
+                <div class="settings-section">
+                    <h4 class="settings-subtitle">Appearance & Theme</h4>
+                    <div class="theme-options-grid">
+                        <div class="theme-card active" data-theme="midnight-purple" onclick="window.musixApp.setTheme('midnight-purple')">
+                            <div class="theme-swatch" style="background: linear-gradient(135deg, #100B1D, #8B5CF6);"></div>
+                            <span class="theme-name">Midnight Purple</span>
+                            <span class="theme-badge">Default</span>
+                        </div>
+                        <div class="theme-card" data-theme="cyber-violet" onclick="window.musixApp.setTheme('cyber-violet')">
+                            <div class="theme-swatch" style="background: linear-gradient(135deg, #0A0612, #A855F7);"></div>
+                            <span class="theme-name">Cyber Violet</span>
+                        </div>
+                        <div class="theme-card" data-theme="deep-neon" onclick="window.musixApp.setTheme('deep-neon')">
+                            <div class="theme-swatch" style="background: linear-gradient(135deg, #06040A, #6366F1);"></div>
+                            <span class="theme-name">Deep Neon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audio Quality Section -->
+                <div class="settings-section">
+                    <h4 class="settings-subtitle">Audio Streaming Quality</h4>
+                    <div class="form-group">
+                        <select id="audio-quality-select" class="form-input form-select" onchange="window.musixApp.setAudioQuality(this.value)">
+                            <option value="320">Very High (320 kbps - Studio Quality)</option>
+                            <option value="256" selected>High (256 kbps - Default)</option>
+                            <option value="160">Normal (160 kbps - Balanced)</option>
+                            <option value="96">Data Saver (96 kbps)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- AI Biometric Privacy Section -->
+                <div class="settings-section">
+                    <h4 class="settings-subtitle">AI Face Search & Privacy</h4>
+                    <div class="settings-toggle-row">
+                        <div>
+                            <div class="toggle-title">100% Local Biometric Processing</div>
+                            <div class="toggle-desc">Webcam frames are analyzed locally in browser memory. No photos or video are recorded or sent to any server.</div>
+                        </div>
+                        <span class="privacy-status-pill">ENABLED ✓</span>
+                    </div>
+
+                    <div class="settings-toggle-row">
+                        <div>
+                            <div class="toggle-title">Live Expression Overlay HUD</div>
+                            <div class="toggle-desc">Render targeting reticle and real-time facial feature tracking on camera view.</div>
+                        </div>
+                        <input type="checkbox" id="setting-hud-toggle" checked onchange="window.musixApp.toggleHudOverlay(this.checked)" />
+                    </div>
+                </div>
+
+                <!-- Audio Visualizer Section -->
+                <div class="settings-section">
+                    <h4 class="settings-subtitle">Player Audio Visualizer</h4>
+                    <div class="form-group">
+                        <select id="visualizer-style-select" class="form-input form-select" onchange="window.musixApp.setVisualizerStyle(this.value)">
+                            <option value="bars" selected>Spectrum Equalizer Bars</option>
+                            <option value="wave">Oscilloscope Waveform</option>
+                            <option value="pulse">Beat Pulsar Glow</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Storage & History Section -->
+                <div class="settings-section">
+                    <h4 class="settings-subtitle">Data & Storage</h4>
+                    <div class="settings-btn-row">
+                        <button class="btn-scan-secondary" onclick="window.musixApp.clearRecentlyPlayedHistory()">Clear Recently Played</button>
+                        <button class="btn-scan-secondary" onclick="window.musixApp.resetPlaylistsToDefault()">Reset Playlists</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Playlist Modal -->
+    <div class="modal-overlay" id="add-to-playlist-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Track to Playlist</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div id="add-to-playlist-track-preview" class="track-preview-box"></div>
+            <div class="playlist-pick-list" id="playlist-pick-list">
+                <!-- User playlists list -->
+            </div>
+            <div class="modal-footer-action">
+                <button class="btn-scan-secondary" onclick="window.musixApp.openCreatePlaylistModal()">+ Create New Playlist</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lyrics Modal -->
+    <div class="modal-overlay" id="lyrics-modal">
+        <div class="modal-content lyrics-modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Karaoke Lyrics</h3>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="lyrics-container" id="lyrics-container">
+                <p>Sing along to the music...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Queue Slide-in Drawer -->
+    <div class="queue-drawer" id="queue-drawer">
+        <div class="modal-header">
+            <h3 class="modal-title">Play Queue</h3>
+            <button class="modal-close-btn" onclick="window.musixApp.toggleQueueModal()">&times;</button>
+        </div>
+        <div id="queue-tracks-list"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toast-notification"></div>
+
+    <!-- Scripts -->
+    <script src="js/audio-synthesizer.js"></script>
+    <script src="js/face-scanner.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
